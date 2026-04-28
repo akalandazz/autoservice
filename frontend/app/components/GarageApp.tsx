@@ -115,19 +115,19 @@ const Icons: Record<string, (p: IconProps) => React.ReactElement> = {
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
-function Nav({ onBook }: { onBook: () => void }) {
+function Nav({ onBook, onNav }: { onBook: () => void; onNav: (id: string) => void }) {
   return (
     <nav className="nav">
       <div className="wrap nav-in">
-        <a href="#home" className="brand">
+        <a href="#home" className="brand" onClick={e => { e.preventDefault(); onNav('home') }}>
           <span className="brand-mark">R<span className="brand-x">/</span></span>
           <span>Redline<span className="brand-x">//</span>Garage</span>
         </a>
         <div className="nav-links">
-          <a href="#services">Services</a>
-          <a href="#pricing">Packages</a>
-          <a href="#book">Book</a>
-          <a href="#visit">Visit</a>
+          <a href="#services" onClick={e => { e.preventDefault(); onNav('services') }}>Services</a>
+          <a href="#pricing" onClick={e => { e.preventDefault(); onNav('pricing') }}>Packages</a>
+          <a href="#book" onClick={e => { e.preventDefault(); onNav('book') }}>Book</a>
+          <a href="#visit" onClick={e => { e.preventDefault(); onNav('visit') }}>Visit</a>
         </div>
         <div className="nav-cta">
           <span className="nav-phone">◉ <b>(415) 555-REV8</b></span>
@@ -768,12 +768,14 @@ function Footer() {
 export default function GarageApp() {
   const [preSelected, setPreSelected] = useState<string | null>(null)
 
-  const scrollToBook = useCallback(() => {
-    const el = document.getElementById('book')
+  const scrollToSection = useCallback((id: string) => {
+    const el = document.getElementById(id)
     if (!el) return
     const top = el.getBoundingClientRect().top + window.scrollY - 60
     window.scrollTo({ top, behavior: 'smooth' })
   }, [])
+
+  const scrollToBook = useCallback(() => scrollToSection('book'), [scrollToSection])
 
   const pickService = (id: string) => {
     setPreSelected(id)
@@ -785,7 +787,7 @@ export default function GarageApp() {
       <div className="bp-grid"/>
       <div className="scanlines"/>
       <div className="page">
-        <Nav onBook={scrollToBook}/>
+        <Nav onBook={scrollToBook} onNav={scrollToSection}/>
         <Hero onBook={scrollToBook}/>
         <Services onPick={pickService}/>
         <Pricing onBook={scrollToBook}/>
