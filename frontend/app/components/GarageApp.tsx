@@ -116,27 +116,63 @@ const Icons: Record<string, (p: IconProps) => React.ReactElement> = {
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
 function Nav({ onBook, onNav }: { onBook: () => void; onNav: (id: string) => void }) {
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
+  const handleNav = (id: string) => {
+    setOpen(false)
+    onNav(id)
+  }
+
   return (
-    <nav className="nav">
-      <div className="wrap nav-in">
-        <a href="#home" className="brand" onClick={e => { e.preventDefault(); onNav('home') }}>
-          <span className="brand-mark">R<span className="brand-x">/</span></span>
-          <span>Redline<span className="brand-x">//</span>Garage</span>
-        </a>
-        <div className="nav-links">
-          <a href="#services" onClick={e => { e.preventDefault(); onNav('services') }}>Services</a>
-          <a href="#pricing" onClick={e => { e.preventDefault(); onNav('pricing') }}>Packages</a>
-          <a href="#book" onClick={e => { e.preventDefault(); onNav('book') }}>Book</a>
-          <a href="#visit" onClick={e => { e.preventDefault(); onNav('visit') }}>Visit</a>
+    <>
+      <nav className="nav">
+        <div className="wrap nav-in">
+          <a href="#home" className="brand" onClick={e => { e.preventDefault(); handleNav('home') }}>
+            <span className="brand-mark">R<span className="brand-x">/</span></span>
+            <span>Redline<span className="brand-x">//</span>Garage</span>
+          </a>
+          <div className="nav-links">
+            <a href="#services" onClick={e => { e.preventDefault(); onNav('services') }}>Services</a>
+            <a href="#pricing" onClick={e => { e.preventDefault(); onNav('pricing') }}>Packages</a>
+            <a href="#book" onClick={e => { e.preventDefault(); onNav('book') }}>Book</a>
+            <a href="#visit" onClick={e => { e.preventDefault(); onNav('visit') }}>Visit</a>
+          </div>
+          <div className="nav-cta">
+            <span className="nav-phone">◉ <b>(415) 555-REV8</b></span>
+            <button className="btn nav-book-btn" onClick={onBook} style={{ padding: '10px 16px', fontSize: 11 }}>
+              Book bay <span className="chev"/>
+            </button>
+            <button className="ham-btn" onClick={() => setOpen(true)} aria-label="Open menu">
+              <span/><span/><span/>
+            </button>
+          </div>
         </div>
-        <div className="nav-cta">
-          <span className="nav-phone">◉ <b>(415) 555-REV8</b></span>
-          <button className="btn" onClick={onBook} style={{ padding: '10px 16px', fontSize: 11 }}>
-            Book bay <span className="chev"/>
-          </button>
+      </nav>
+      {open && (
+        <div className="mobile-nav" onClick={() => setOpen(false)}>
+          <div className="mobile-nav-panel" onClick={e => e.stopPropagation()}>
+            <div className="mobile-nav-head">
+              <a href="#home" className="brand" onClick={e => { e.preventDefault(); handleNav('home') }}>
+                <span className="brand-mark">R<span className="brand-x">/</span></span>
+                <span>Redline<span className="brand-x">//</span>Garage</span>
+              </a>
+              <button className="close-btn" onClick={() => setOpen(false)} aria-label="Close menu">✕</button>
+            </div>
+            <nav className="mobile-nav-links">
+              <a href="#services" onClick={e => { e.preventDefault(); handleNav('services') }}>Services</a>
+              <a href="#pricing" onClick={e => { e.preventDefault(); handleNav('pricing') }}>Packages</a>
+              <a href="#book" onClick={e => { e.preventDefault(); handleNav('book') }}>Book</a>
+              <a href="#visit" onClick={e => { e.preventDefault(); handleNav('visit') }}>Visit</a>
+            </nav>
+          </div>
         </div>
-      </div>
-    </nav>
+      )}
+    </>
   )
 }
 
@@ -763,6 +799,21 @@ function Footer() {
   )
 }
 
+// ─── Mobile Bottom CTA ───────────────────────────────────────────────────────
+
+function MobileBottomBar({ onBook }: { onBook: () => void }) {
+  return (
+    <div className="mob-cta">
+      <a href="tel:+14155553838" className="mob-cta-phone">
+        ◉ <b>(415) 555-REV8</b>
+      </a>
+      <button className="btn btn-mag mob-cta-book" onClick={onBook}>
+        Book a bay <span className="chev"/>
+      </button>
+    </div>
+  )
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function GarageApp() {
@@ -795,6 +846,7 @@ export default function GarageApp() {
         <Visit/>
         <Footer/>
       </div>
+      <MobileBottomBar onBook={scrollToBook}/>
     </>
   )
 }
