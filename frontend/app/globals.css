@@ -590,15 +590,10 @@ img { max-width: 100%; display: block }
   align-items: center;
 }
 .mob-cta-phone {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--ink-dim);
   flex-shrink: 0;
-  white-space: nowrap;
-  transition: color 0.15s;
+  padding: 14px;
+  justify-content: center;
 }
-.mob-cta-phone b { color: var(--ink) }
-.mob-cta-phone:hover { color: var(--ink) }
 .mob-cta-book {
   flex: 1;
   justify-content: center;
