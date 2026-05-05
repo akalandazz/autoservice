@@ -14,9 +14,9 @@
   --blueprint: #1a3a5c;
   --stroke: rgba(0, 240, 255, 0.18);
   --stroke-strong: rgba(0, 240, 255, 0.45);
-  --font-display: var(--font-orbitron), var(--font-rajdhani), sans-serif;
-  --font-body: var(--font-rajdhani), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-display: var(--font-orbitron), var(--font-noto-georgian), var(--font-rajdhani), sans-serif;
+  --font-body: var(--font-rajdhani), var(--font-noto-georgian), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), var(--font-noto-georgian), ui-monospace, monospace;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0 }
@@ -256,7 +256,7 @@ img { max-width: 100%; display: block }
 /* ============ PRICING ============ */
 .pricing { background: linear-gradient(180deg, transparent 0%, rgba(26,58,92,0.15) 50%, transparent 100%) }
 .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px }
-.price { position: relative; padding: 40px 32px 36px; border: 1px solid var(--stroke); background: rgba(10,14,22,0.7); backdrop-filter: blur(8px); transition: all .3s }
+.price { position: relative; padding: 40px 32px 36px; border: 1px solid var(--stroke); background: rgba(10,14,22,0.7); backdrop-filter: blur(8px); transition: all .3s; display: flex; flex-direction: column }
 .price.featured { border-color: var(--neon-mag); background: linear-gradient(180deg, rgba(255,43,209,0.08), rgba(10,14,22,0.9)); box-shadow: 0 0 0 1px rgba(255,43,209,0.3), 0 0 60px rgba(255,43,209,0.12) }
 .price:hover { transform: translateY(-6px) }
 .price.featured:hover { box-shadow: 0 0 0 1px rgba(255,43,209,0.5), 0 0 80px rgba(255,43,209,0.2) }
@@ -268,7 +268,7 @@ img { max-width: 100%; display: block }
 .price-amount .cur { font-family: var(--font-mono); color: var(--ink-dim); font-size: 14px }
 .price-amount .num { font-family: var(--font-display); font-weight: 900; font-size: 64px; line-height: 1 }
 .price-amount .per { color: var(--ink-dim); font-size: 14px; margin-left: 4px }
-.price-feats { list-style: none; display: flex; flex-direction: column; gap: 12px; padding-bottom: 32px; border-bottom: 1px dashed rgba(0,240,255,0.18); margin-bottom: 28px }
+.price-feats { list-style: none; display: flex; flex-direction: column; gap: 12px; padding-bottom: 32px; border-bottom: 1px dashed rgba(0,240,255,0.18); margin-bottom: 28px; flex: 1 }
 .price-feats li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; color: var(--ink) }
 .price-feats li::before { content: ''; width: 6px; height: 6px; background: var(--neon-cyan); margin-top: 8px; flex: none; box-shadow: 0 0 8px var(--neon-cyan) }
 .price.featured .price-feats li::before { background: var(--neon-mag); box-shadow: 0 0 8px var(--neon-mag) }

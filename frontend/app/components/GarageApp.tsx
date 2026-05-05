@@ -5,26 +5,26 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { id: 'diag',   icon: 'Diag',       num: '01', title: 'Diagnostics',         desc: 'OBD, chassis, electrical, and full-bay inspection. We find what the dealer missed.',  price: 'From $89',    time: '~1hr' },
-  { id: 'repair', icon: 'Wrench',     num: '02', title: 'General Repair',      desc: 'Bolt-ons to belt jobs. Honest quotes, no parts cannon. Walk-in friendly.',            price: 'From $120',   time: 'Same-day' },
-  { id: 'brakes', icon: 'Suspension', num: '03', title: 'Suspension & Brakes', desc: 'Coilovers, drop kits, big brake kits. Corner-balanced and alignment-checked.',        price: 'From $320',   time: '4–6 hrs' },
-  { id: 'body',   icon: 'Body',       num: '04', title: 'Body & Collision',    desc: 'Panel pulls, dent work, full respray prep. We make tragedies disappear.',             price: 'From $450',   time: '2–5 days' },
-  { id: 'paint',  icon: 'Paint',      num: '05', title: 'Paint & Wraps',       desc: 'House colors, flakes, candy, pearls. Vinyl wraps for the non-commitals.',            price: 'From $1,800', time: '3–7 days' },
-  { id: 'engine', icon: 'Engine',     num: '06', title: 'Engine Rebuilds',     desc: 'Short blocks, forged internals, head work. Built not bought — receipts included.',   price: 'From $3,900', time: '2–4 weeks' },
-  { id: 'tires',  icon: 'Tire',       num: '07', title: 'Tires & Wheels',      desc: 'Mount, balance, stagger fitment, stretch. Road-force on request.',                  price: 'From $80/wh', time: '~45min' },
-  { id: 'detail', icon: 'Sparkle',    num: '08', title: 'Detailing',           desc: "Full paint correction, ceramic coat, interior rehab. For when it's show day.",      price: 'From $240',   time: '1–2 days' },
+  { id: 'diag',   icon: 'Diag',       num: '01', title: 'დიაგნოსტიკა',              desc: 'OBD, შასი, ელექტრიკა და სრული დათვალიერება. ვპოულობთ იმას, რაც დილერმა გამოტოვა.',  price: '₾89-დან',      time: '~1სთ' },
+  { id: 'repair', icon: 'Wrench',     num: '02', title: 'ზოგადი რემონტი',           desc: 'მცირე შეკეთებიდან ღვედის შეცვლამდე. პატიოსანი ფასები, ზედმეტი ნაწილების გარეშე.',   price: '₾120-დან',     time: 'იმავე დღეს' },
+  { id: 'brakes', icon: 'Suspension', num: '03', title: 'სუსპენზია და მუხრუჭები',  desc: 'კოილოვერები, დამდაბლების კიტები, დიდი მუხრუჭები. ბალანსირებული და განვითარებული.',  price: '₾320-დან',     time: '4–6 სთ' },
+  { id: 'body',   icon: 'Body',       num: '04', title: 'ძარა და დაჯახება',         desc: 'პანელის გასწორება, ჩაჭდევნილი ადგილების გამოტანა, შეღებვის მომზადება.',              price: '₾450-დან',     time: '2–5 დღე' },
+  { id: 'paint',  icon: 'Paint',      num: '05', title: 'შეღებვა და მფარავი',       desc: 'ფირმის ფერები, შიმერი, კენდი, მარგალიტი. ვინილის მფარავი ყოყმანიანებისთვის.',        price: '₾1,800-დან',   time: '3–7 დღე' },
+  { id: 'engine', icon: 'Engine',     num: '06', title: 'ძრავის გადაკეთება',        desc: 'ბლოკები, ჭედილი დეტალები, თავის სამუშაოები. აშენებული, არა ყიდული — ქვითრებით.',    price: '₾3,900-დან',   time: '2–4 კვირა' },
+  { id: 'tires',  icon: 'Tire',       num: '07', title: 'საბურავები და დისკები',    desc: 'დაყენება, ბალანსი, განსხვავებული ზომა, სტრეჩი. Road-force მოთხოვნით.',               price: '₾80-დან/თვ',   time: '~45 წთ' },
+  { id: 'detail', icon: 'Sparkle',    num: '08', title: 'დეტეილინგი',               desc: 'სრული ლაკის კორექცია, კერამიკული საფარი, სალონის აღდგენა. შოუს დღისთვის.',          price: '₾240-დან',     time: '1–2 დღე' },
 ]
 
 const PRICING = [
-  { tier: 'TIER 01', name: 'Pit Stop',     price: 149,  per: '/visit', badge: null,          featured: false,
-    feats: ['Full diagnostic scan', 'Oil + filter swap', 'Brake + fluid check', 'Tire pressure & rotation', '30-min road test', 'Shop sticker + coffee'],
-    cta: 'Book Pit Stop' },
-  { tier: 'TIER 02', name: 'Street Build', price: 1290, per: '/build', badge: 'Most Booked', featured: true,
-    feats: ['Everything in Pit Stop', 'Full coilover install + align', 'Catback or axle-back exhaust', 'ECU flash (stage 1)', 'Fresh plugs + filters', 'Dyno pull w/ printout', '30-day tune support'],
-    cta: 'Start Street Build' },
-  { tier: 'TIER 03', name: 'Track Spec',   price: 4850, per: '/build', badge: null,          featured: false,
-    feats: ['Everything in Street Build', 'Forged internals option', 'Big brake kit install', 'Roll cage consultation', 'Corner balance + scale', 'Race alignment', '90-day warranty'],
-    cta: 'Go Track Spec' },
+  { tier: 'დონე 01', name: 'პიტ სტოპი',   price: 149,  per: '/ვიზიტი', badge: null,            featured: false,
+    feats: ['სრული დიაგნოსტიკური სკანი', 'ზეთის + ფილტრის შეცვლა', 'მუხრუჭების + სითხეების შემოწმება', 'საბურავების წნევა და როტაცია', '30-წუთიანი გზის ტესტი', 'სახელოსნოს სტიკერი + ყავა'],
+    cta: 'პიტ სტოპის ჯავშანი' },
+  { tier: 'დონე 02', name: 'სტრიტ ბილდი', price: 1290, per: '/ბილდი',  badge: 'ყველაზე ხშირი', featured: true,
+    feats: ['ყველაფერი პიტ სტოპიდან', 'სრული კოილოვერის დაყენება + გასწორება', 'Catback ან axle-back გამონაბოლქვი', 'ECU ფლეში (1-ლი ეტაპი)', 'ახალი სანთლები + ფილტრები', 'დინო ტესტი ამონაბეჭდით', '30-დღიანი ტიუნინგ მხარდაჭერა'],
+    cta: 'სტრიტ ბილდის დაწყება' },
+  { tier: 'დონე 03', name: 'ტრეკ სპეცი',  price: 4850, per: '/ბილდი',  badge: null,            featured: false,
+    feats: ['ყველაფერი სტრიტ ბილდიდან', 'ჭედილი დეტალების ვარიანტი', 'დიდი მუხრუჭების კიტი', 'უსაფრთხოების კარკასის კონსულტაცია', 'კუთხეების ბალანსი + სასწორი', 'სარბოლო გასწორება', '90-დღიანი გარანტია'],
+    cta: 'ტრეკ სპეცზე გადასვლა' },
 ]
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -140,20 +140,20 @@ function Nav({ onBook, onNav, drawerOpen, setDrawerOpen }: {
             <span>Redline<span className="brand-x">//</span>Garage</span>
           </a>
           <div className="nav-links">
-            <a href="#services" onClick={e => { e.preventDefault(); onNav('services') }}>Services</a>
-            <a href="#pricing" onClick={e => { e.preventDefault(); onNav('pricing') }}>Packages</a>
-            <a href="#book" onClick={e => { e.preventDefault(); onNav('book') }}>Book</a>
-            <a href="#visit" onClick={e => { e.preventDefault(); onNav('visit') }}>Visit</a>
+            <a href="#services" onClick={e => { e.preventDefault(); onNav('services') }}>სერვისები</a>
+            <a href="#pricing" onClick={e => { e.preventDefault(); onNav('pricing') }}>პაკეტები</a>
+            <a href="#book" onClick={e => { e.preventDefault(); onNav('book') }}>ჯავშანი</a>
+            <a href="#visit" onClick={e => { e.preventDefault(); onNav('visit') }}>კონტაქტი</a>
           </div>
           <div className="nav-cta">
-            <span className="nav-phone">◉ <b>(415) 555-REV8</b></span>
-            <button className="btn nav-book-btn" onClick={onBook} style={{ padding: '10px 16px', fontSize: 11 }}>
-              Book bay <span className="chev"/>
+            <span className="nav-phone">◉ <b>(032) 555-REV8</b></span>
+            <button className="btn" onClick={onBook} style={{ padding: '10px 16px', fontSize: 11 }}>
+              დაჯავშნა <span className="chev"/>
             </button>
             <button
               type="button"
               className={`nav-burger${drawerOpen ? ' open' : ''}`}
-              aria-label="Menu"
+              aria-label="მენიუ"
               aria-expanded={drawerOpen}
               onClick={() => setDrawerOpen(o => !o)}
             >
@@ -164,14 +164,14 @@ function Nav({ onBook, onNav, drawerOpen, setDrawerOpen }: {
       </nav>
       <div className={`nav-drawer${drawerOpen ? ' open' : ''}`}>
         <div className="nav-drawer-in">
-          <a href="#services" onClick={e => { e.preventDefault(); handleNav('services') }}>Services <span className="arr">→</span></a>
-          <a href="#pricing" onClick={e => { e.preventDefault(); handleNav('pricing') }}>Packages <span className="arr">→</span></a>
-          <a href="#book" onClick={e => { e.preventDefault(); handleNav('book') }}>Book a bay <span className="arr">→</span></a>
-          <a href="#visit" onClick={e => { e.preventDefault(); handleNav('visit') }}>Visit / Hours <span className="arr">→</span></a>
+          <a href="#services" onClick={e => { e.preventDefault(); handleNav('services') }}>სერვისები <span className="arr">→</span></a>
+          <a href="#pricing" onClick={e => { e.preventDefault(); handleNav('pricing') }}>პაკეტები <span className="arr">→</span></a>
+          <a href="#book" onClick={e => { e.preventDefault(); handleNav('book') }}>დაჯავშნე ბოქსი <span className="arr">→</span></a>
+          <a href="#visit" onClick={e => { e.preventDefault(); handleNav('visit') }}>მისამართი / საათები <span className="arr">→</span></a>
           <div className="nav-drawer-foot">
-            <span>◉ <b>(415) 555-REV8</b></span>
-            <span>412 Alameda Ave · Bayview, CA</span>
-            <span>Open Mon–Fri 08:00 – 19:00</span>
+            <span>◉ <b>(032) 555-REV8</b></span>
+            <span>ალ. ყაზბეგის გამზ. 412 · საბურთალო, თბილისი</span>
+            <span>ღია ორშ–პარ 08:00 – 19:00</span>
           </div>
         </div>
       </div>
@@ -239,7 +239,7 @@ function Rpm() {
     <div className="gauge-card">
       <span className="brk tl"/><span className="brk tr"/><span className="brk bl"/><span className="brk br"/>
       <div className="gauge-head">
-        <span><span className="led"/>&nbsp;&nbsp;LIVE · BAY 03</span>
+        <span><span className="led"/>&nbsp;&nbsp;ლაივი · ბოქსი 03</span>
         <span>SYS/READY</span>
       </div>
       <div className="gauge">
@@ -257,7 +257,7 @@ function Rpm() {
         </div>
       </div>
       <div className="gauge-info">
-        <div><span>Boost</span><span>{(0.6 + pct * 1.4).toFixed(1)} bar</span></div>
+        <div><span>ბუსტი</span><span>{(0.6 + pct * 1.4).toFixed(1)} bar</span></div>
         <div><span>AFR</span><span>{(11.2 + (rpm % 100) / 50).toFixed(1)}</span></div>
         <div><span>IAT</span><span>{(38 + pct * 18).toFixed(0)}°C</span></div>
       </div>
@@ -269,18 +269,18 @@ function Rpm() {
 
 function Telemetry() {
   const items = [
-    'CURRENTLY OPEN · BAY 02 AVAILABLE',
-    'NEXT SLOT → TUE 10:30',
-    'NOW TUNING · 2003 NISSAN 350Z',
-    'DYNO PULL COMPLETE · +48 WHP',
-    '14-DAY WARRANTY ON ALL BUILDS',
-    'WALK-INS WELCOME BEFORE 17:00',
-    'OVER 1,240 BUILDS COMPLETED',
+    'ამჟამად ღიაა · ბოქსი 02 თავისუფალია',
+    'შემდეგი სლოტი → სამშ. 10:30',
+    'ამჟამად ვტიუნავთ · 2003 NISSAN 350Z',
+    'დინო ტესტი დასრულდა · +48 WHP',
+    '14-დღიანი გარანტია ყველა ბილდზე',
+    'შემოდით 17:00-მდე ჯავშნის გარეშეც',
+    '1,240+ დასრულებული ბილდი',
   ]
   const loop = [...items, ...items]
   return (
     <div className="telemetry">
-      <span>◉ LIVE</span>
+      <span>◉ ლაივი</span>
       <div className="tel-marquee">
         <div className="tel-marquee-inner">
           {loop.map((t, i) => (
@@ -288,7 +288,7 @@ function Telemetry() {
           ))}
         </div>
       </div>
-      <span>LAT 40.7128 · LON -74.0060</span>
+      <span>LAT 41.6938 · LON 44.8015</span>
     </div>
   )
 }
@@ -302,23 +302,23 @@ function Hero({ onBook }: { onBook: () => void }) {
       <div className="hero-glow"/>
       <div className="wrap hero-grid">
         <div>
-          <div className="tag" style={{ marginBottom: 18 }}>◤ EST. 2011 · UNDERGROUND CERTIFIED</div>
+          <div className="tag" style={{ marginBottom: 18 }}>◤ დაარსდა 2011 · UNDERGROUND CERTIFIED</div>
           <h1 className="hero-title">
-            <span className="stroke hero-pulse">BRING US</span><br/>
-            <span>YOUR BEATER.</span>
-            <span className="line2">LEAVE A BEAST.</span>
+            <span className="stroke hero-pulse">მოგვიყვანე</span><br/>
+            <span>შენი ჯართი.</span>
+            <span className="line2">გაიყვანე მხეცი.</span>
           </h1>
           <p className="hero-copy">
-            Full-service tuner garage in Bayview. <b>Diagnostics, body, paint, engine rebuilds, suspension</b> — dialled by hand, not by chain-store kids. Book a bay below, or call the shop and yell at Diesel.
+            სრული მომსახურების ტიუნერ ხელოსანი საბურთალოზე. <b>დიაგნოსტიკა, ძარა, შეღებვა, ძრავის ახლად აწყობა, სუსპენზია</b> — ხელით გადანაწილებული, არა ჩვენაობრივი საოცების ბავშვების მიერ. დაჯავშნე ბოქსი ქვემოთ, ან დარეკე და დიზელს დაჯეჭი.
           </p>
           <div className="hero-ctas">
-            <button className="btn" onClick={onBook}>Book a bay <span className="chev"/></button>
-            <a className="btn btn-mag" href="#pricing">See packages</a>
+            <button className="btn" onClick={onBook}>დაჯავშნე ბოქსი <span className="chev"/></button>
+            <a className="btn btn-mag" href="#pricing">ნახე პაკეტები</a>
           </div>
           <div className="hero-meta">
-            <div className="stat"><span className="stat-v">1,240+</span><span className="stat-l">Builds shipped</span></div>
-            <div className="stat"><span className="stat-v">14-day</span><span className="stat-l">Parts &amp; labor</span></div>
-            <div className="stat"><span className="stat-v">4.9★</span><span className="stat-l">287 reviews</span></div>
+            <div className="stat"><span className="stat-v">1,240+</span><span className="stat-l">დასრულებული ბილდი</span></div>
+            <div className="stat"><span className="stat-v">14 დღე</span><span className="stat-l">ნაწილები + სამუშაო</span></div>
+            <div className="stat"><span className="stat-v">4.9★</span><span className="stat-l">287 შეფასება</span></div>
           </div>
         </div>
         <Rpm/>
@@ -335,8 +335,8 @@ function Services({ onPick }: { onPick: (id: string) => void }) {
     <section className="section" id="services">
       <div className="wrap">
         <div className="section-head">
-          <h2 className="section-title">What<br/>we <span className="x">wrench</span>.</h2>
-          <p className="section-sub">Every service is run out of our Bayview shop, by techs who built their own rides. No subcontractors, no guesswork — just dyno time and dirty hands.</p>
+          <h2 className="section-title">რას<br/>ვ<span className="x">აკეთებთ</span>.</h2>
+          <p className="section-sub">ყველა სერვისი ტარდება ჩვენს საბურთალოს ხელოსანში, ოსტატების მიერ რომლებმაც ტექნიკის ხრიდი ჩაიჭირეს. ქვეკონტრაქტორები არ გვყავს, გამოცნობების გარეშე — მხოლოდ დინო-დრო და გასვრილი ხელები.</p>
         </div>
         <div className="svc-grid">
           {SERVICES.map(s => {
@@ -364,8 +364,8 @@ function Pricing({ onBook }: { onBook: () => void }) {
     <section className="section pricing" id="pricing">
       <div className="wrap">
         <div className="section-head">
-          <h2 className="section-title">Pick<br/>your <span className="x">spec.</span></h2>
-          <p className="section-sub">Three flat-rate packages for the 80% of jobs we see. Custom build? Call and we&apos;ll quote it in an hour.</p>
+          <h2 className="section-title">აირჩიე<br/>შენი <span className="x">სპეცი.</span></h2>
+          <p className="section-sub">სამი ფიქსირებული პაკეტი — 80% შემთხვევებისთვის, რასაც ვხვდებით. გჭირდებათ ინდივიდუალური ბილდი? დარეკეთ და საათში მოგცემთ ფასს.</p>
         </div>
         <div className="price-grid">
           {PRICING.map(p => (
@@ -375,7 +375,7 @@ function Pricing({ onBook }: { onBook: () => void }) {
               <div className="price-tier">{p.tier}</div>
               <div className="price-name">{p.name}</div>
               <div className="price-amount">
-                <span className="cur">$</span>
+                <span className="cur">₾</span>
                 <span className="num">{p.price.toLocaleString()}</span>
                 <span className="per">{p.per}</span>
               </div>
@@ -446,12 +446,12 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
 
   const validate = () => {
     const e: BookingErrors = {}
-    if (!info.name.trim()) e.name = 'Required'
-    if (!/^[\d\s\-+()]{10,}$/.test(info.phone)) e.phone = 'Valid phone required'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(info.email)) e.email = 'Valid email required'
-    if (!info.carMake.trim()) e.carMake = 'Required'
-    if (!info.carModel.trim()) e.carModel = 'Required'
-    if (!/^(19|20)\d{2}$/.test(info.carYear)) e.carYear = '4-digit year'
+    if (!info.name.trim()) e.name = 'სავალდებულო'
+    if (!/^[\d\s\-+()]{10,}$/.test(info.phone)) e.phone = 'მიუთითე სწორი ნომერი'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(info.email)) e.email = 'მიუთითე სწორი ელფოსტა'
+    if (!info.carMake.trim()) e.carMake = 'სავალდებულო'
+    if (!info.carModel.trim()) e.carModel = 'სავალდებულო'
+    if (!/^(19|20)\d{2}$/.test(info.carYear)) e.carYear = '4 ციფრიანი წელი'
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -477,15 +477,15 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
     onBookedReset()
   }
 
-  const STEPS = ['Service', 'Slot', 'Info', 'Confirm']
-  const fmtDate = (d: Date | null) => d ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : ''
+  const STEPS = ['სერვისი', 'დრო', 'ინფო', 'დადასტურება']
+  const fmtDate = (d: Date | null) => d ? d.toLocaleDateString('ka-GE', { weekday: 'short', month: 'short', day: 'numeric' }) : ''
 
   return (
     <section className="section booking" id="book" style={{ padding: '80px 0 100px' }}>
       <div className="wrap">
         <div className="section-head">
-          <h2 className="section-title">Book<br/>a <span className="x">bay.</span></h2>
-          <p className="section-sub">Four quick steps. We&apos;ll text you a confirmation + a prep list. Same-day slots often available — call if you don&apos;t see one you like.</p>
+          <h2 className="section-title">დაჯავშნე<br/>ბო<span className="x">ქსი.</span></h2>
+          <p className="section-sub">ოთხი სწრაფი ნაბიჯი. დადასტურებას + მომზადების სიას SMS-ით მოგაწვდით. ხშირად ხელმისაწვდომია იმავე დღის სლოტებიც — დარეკე, თუ ვერ პოულობ შესაფერისს.</p>
         </div>
         <div className="book-card">
           <span className="brk tl"/><span className="brk tr"/><span className="brk bl"/><span className="brk br"/>
@@ -502,8 +502,8 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
           <div className="book-body">
             {step === 0 && (
               <>
-                <h3 className="book-h">What are we doing?</h3>
-                <p className="book-sub">Pick one or more. Stack services to save a trip.</p>
+                <h3 className="book-h">რას ვაკეთებთ?</h3>
+                <p className="book-sub">აირჩიე ერთი ან რამდენიმე. დააწყვილე სერვისები ვიზიტის დაზოგვისთვის.</p>
                 <div className="svc-picker">
                   {SERVICES.map(s => {
                     const Icon = Icons[s.icon]
@@ -522,10 +522,10 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
                 </div>
                 <div className="book-nav">
                   <span style={{ alignSelf: 'center', color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.14em' }}>
-                    {services.length} selected · Est. from <b style={{ color: 'var(--neon-cyan)' }}>${serviceTotal.toLocaleString()}</b>
+                    {services.length} არჩეული · დაახლ. <b style={{ color: 'var(--neon-cyan)' }}>₾{serviceTotal.toLocaleString()}</b>
                   </span>
                   <button className="btn" disabled={services.length === 0} onClick={next} style={{ opacity: services.length === 0 ? 0.4 : 1 }}>
-                    Next: Pick slot <span className="chev"/>
+                    შემდეგი: აირჩიე დრო <span className="chev"/>
                   </button>
                 </div>
               </>
@@ -533,15 +533,15 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
 
             {step === 1 && (
               <>
-                <h3 className="book-h">When should we roll you in?</h3>
-                <p className="book-sub">Next 14 days. Saturdays fill fast — book early.</p>
+                <h3 className="book-h">როდის შეგიძლია მოსვლა?</h3>
+                <p className="book-sub">მომდევნო 14 დღე. შაბათი სწრაფად ივსება — დაჯავშნე ადრე.</p>
                 <div className="date-grid">
                   {dates.map((d, i) => {
                     const dis = isDisabledDate(d)
                     const sel = date && d.toDateString() === date.toDateString()
                     return (
                       <button type="button" key={i} className={`date-cell${sel ? ' sel' : ''}${dis ? ' dis' : ''}`} onClick={() => !dis && setDate(d)}>
-                        <div className="dow">{d.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                        <div className="dow">{d.toLocaleDateString('ka-GE', { weekday: 'short' })}</div>
                         <div className="d">{d.getDate()}</div>
                       </button>
                     )
@@ -550,7 +550,7 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
                 {date && (
                   <>
                     <div style={{ marginTop: 28, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-dim)', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
-                      ◤ Available times · {fmtDate(date)}
+                      ◤ ხელმისაწვდომი დრო · {fmtDate(date)}
                     </div>
                     <div className="time-grid">
                       {times.map(t => {
@@ -563,9 +563,9 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
                   </>
                 )}
                 <div className="book-nav">
-                  <button className="btn btn-ghost" onClick={prev}>← Back</button>
+                  <button className="btn btn-ghost" onClick={prev}>← უკან</button>
                   <button className="btn" disabled={!date || !time} onClick={next} style={{ opacity: (!date || !time) ? 0.4 : 1 }}>
-                    Next: Your info <span className="chev"/>
+                    შემდეგი: შენი ინფო <span className="chev"/>
                   </button>
                 </div>
               </>
@@ -573,78 +573,78 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
 
             {step === 2 && (
               <>
-                <h3 className="book-h">Who + what are we working on?</h3>
-                <p className="book-sub">We&apos;ll text a confirmation + prep list to the number below.</p>
+                <h3 className="book-h">ვინ ხარ + რაზე ვმუშაობთ?</h3>
+                <p className="book-sub">დადასტურებას + მომზადების სიას ქვემოთ მითითებულ ნომერზე გამოგიგზავნით SMS-ით.</p>
                 <div className="field-grid">
                   <div className={`field${errors.name ? ' err' : ''}`}>
-                    <label>Name</label>
-                    <input value={info.name} onChange={e => setInfo({ ...info, name: e.target.value })} placeholder="Your name"/>
+                    <label>სახელი</label>
+                    <input value={info.name} onChange={e => setInfo({ ...info, name: e.target.value })} placeholder="შენი სახელი"/>
                     {errors.name && <span className="err-msg">⚠ {errors.name}</span>}
                   </div>
                   <div className={`field${errors.phone ? ' err' : ''}`}>
-                    <label>Phone</label>
-                    <input value={info.phone} onChange={e => setInfo({ ...info, phone: e.target.value })} placeholder="(415) 555-0123"/>
+                    <label>ტელეფონი</label>
+                    <input value={info.phone} onChange={e => setInfo({ ...info, phone: e.target.value })} placeholder="+995 555 12 34 56"/>
                     {errors.phone && <span className="err-msg">⚠ {errors.phone}</span>}
                   </div>
                 </div>
                 <div className={`field${errors.email ? ' err' : ''}`}>
-                  <label>Email</label>
+                  <label>ელფოსტა</label>
                   <input value={info.email} onChange={e => setInfo({ ...info, email: e.target.value })} placeholder="you@domain.com"/>
                   {errors.email && <span className="err-msg">⚠ {errors.email}</span>}
                 </div>
                 <div className="field-grid-3">
                   <div className={`field${errors.carYear ? ' err' : ''}`}>
-                    <label>Year</label>
+                    <label>წელი</label>
                     <input value={info.carYear} onChange={e => setInfo({ ...info, carYear: e.target.value })} placeholder="2003"/>
                     {errors.carYear && <span className="err-msg">⚠ {errors.carYear}</span>}
                   </div>
                   <div className={`field${errors.carMake ? ' err' : ''}`}>
-                    <label>Make</label>
+                    <label>მარკა</label>
                     <input value={info.carMake} onChange={e => setInfo({ ...info, carMake: e.target.value })} placeholder="Nissan"/>
                     {errors.carMake && <span className="err-msg">⚠ {errors.carMake}</span>}
                   </div>
                   <div className={`field${errors.carModel ? ' err' : ''}`}>
-                    <label>Model</label>
+                    <label>მოდელი</label>
                     <input value={info.carModel} onChange={e => setInfo({ ...info, carModel: e.target.value })} placeholder="350Z"/>
                     {errors.carModel && <span className="err-msg">⚠ {errors.carModel}</span>}
                   </div>
                 </div>
                 <div className="field">
-                  <label>Notes (optional)</label>
-                  <textarea rows={3} value={info.notes} onChange={e => setInfo({ ...info, notes: e.target.value })} placeholder="Any weird noises, mods installed, what you're after..."/>
+                  <label>კომენტარი (არასავალდებულო)</label>
+                  <textarea rows={3} value={info.notes} onChange={e => setInfo({ ...info, notes: e.target.value })} placeholder="უცნაური ხმები, დამატებული მოდები, რა გინდა..."/>
                 </div>
                 <div className="book-nav">
-                  <button className="btn btn-ghost" onClick={prev}>← Back</button>
-                  <button className="btn" onClick={next}>Review &amp; Confirm <span className="chev"/></button>
+                  <button className="btn btn-ghost" onClick={prev}>← უკან</button>
+                  <button className="btn" onClick={next}>გადახედვა და დადასტურება <span className="chev"/></button>
                 </div>
               </>
             )}
 
             {step === 3 && !submitted && (
               <>
-                <h3 className="book-h">Confirm your booking</h3>
-                <p className="book-sub">Review below and lock it in.</p>
+                <h3 className="book-h">დაადასტურე შენი ჯავშანი</h3>
+                <p className="book-sub">გადახედე ქვემოთ და დაამოწმე.</p>
                 <div className="summary">
-                  <h4>◤ Booking summary</h4>
+                  <h4>◤ ჯავშნის შეჯამება</h4>
                   <div className="sum-row">
-                    <span className="k">Services</span>
+                    <span className="k">სერვისები</span>
                     <span className="v">{services.map(id => SERVICES.find(s => s.id === id)?.title ?? id).join(' · ')}</span>
                   </div>
-                  <div className="sum-row"><span className="k">When</span><span className="v">{fmtDate(date)} · {time}</span></div>
-                  <div className="sum-row"><span className="k">Customer</span><span className="v">{info.name}</span></div>
-                  <div className="sum-row"><span className="k">Contact</span><span className="v">{info.phone} · {info.email}</span></div>
-                  <div className="sum-row"><span className="k">Vehicle</span><span className="v">{info.carYear} {info.carMake} {info.carModel}</span></div>
+                  <div className="sum-row"><span className="k">როდის</span><span className="v">{fmtDate(date)} · {time}</span></div>
+                  <div className="sum-row"><span className="k">კლიენტი</span><span className="v">{info.name}</span></div>
+                  <div className="sum-row"><span className="k">კონტაქტი</span><span className="v">{info.phone} · {info.email}</span></div>
+                  <div className="sum-row"><span className="k">მანქანა</span><span className="v">{info.carYear} {info.carMake} {info.carModel}</span></div>
                   {info.notes && (
                     <div className="sum-row">
-                      <span className="k">Notes</span>
+                      <span className="k">კომენტარი</span>
                       <span className="v" style={{ maxWidth: 360, textAlign: 'right', fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 14 }}>{info.notes}</span>
                     </div>
                   )}
-                  <div className="sum-total"><span className="k">Estimate starts at</span><span className="v">${serviceTotal.toLocaleString()}</span></div>
+                  <div className="sum-total"><span className="k">სავარაუდო ფასი იწყება</span><span className="v">₾{serviceTotal.toLocaleString()}-დან</span></div>
                 </div>
                 <div className="book-nav">
-                  <button className="btn btn-ghost" onClick={prev}>← Back</button>
-                  <button className="btn btn-mag" onClick={lockIn}>Lock it in <span className="chev"/></button>
+                  <button className="btn btn-ghost" onClick={prev}>← უკან</button>
+                  <button className="btn btn-mag" onClick={lockIn}>დადასტურება <span className="chev"/></button>
                 </div>
               </>
             )}
@@ -652,17 +652,17 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
             {step === 3 && submitted && (
               <div className="success">
                 <div className="success-ring">✓</div>
-                <h3>Bay locked in.</h3>
-                <p>We&apos;ll text <b style={{ color: 'var(--ink)' }}>{info.phone}</b> with prep steps. Roll up 10 minutes early so we can walk the car.</p>
+                <h3>ბოქსი დაჯავშნილია.</h3>
+                <p><b style={{ color: 'var(--ink)' }}>{info.phone}</b>-ზე გამოგიგზავნით SMS-ით მომზადების ნაბიჯებს. მოდი 10 წუთით ადრე, რომ მანქანას ერთად დავათვალიეროთ.</p>
                 <div className="ticket">
-                  <div><div className="t-k">Confirm #</div><div className="t-v">RLG-{confirmNum}</div></div>
-                  <div><div className="t-k">Who</div><div className="t-v">{info.name}</div></div>
-                  <div><div className="t-k">Ride</div><div className="t-v">{info.carYear} {info.carMake} {info.carModel}</div></div>
-                  <div><div className="t-k">When</div><div className="t-v">{fmtDate(date)} · {time}</div></div>
-                  <div><div className="t-k">Est.</div><div className="t-v">${serviceTotal.toLocaleString()}+</div></div>
+                  <div><div className="t-k">ჯავშნის #</div><div className="t-v">RLG-{confirmNum}</div></div>
+                  <div><div className="t-k">ვინ</div><div className="t-v">{info.name}</div></div>
+                  <div><div className="t-k">მანქანა</div><div className="t-v">{info.carYear} {info.carMake} {info.carModel}</div></div>
+                  <div><div className="t-k">როდის</div><div className="t-v">{fmtDate(date)} · {time}</div></div>
+                  <div><div className="t-k">დაახლ.</div><div className="t-v">₾{serviceTotal.toLocaleString()}+</div></div>
                 </div>
                 <div style={{ marginTop: 32 }}>
-                  <button className="btn btn-ghost" onClick={reset}>Book another →</button>
+                  <button className="btn btn-ghost" onClick={reset}>დაჯავშნე კიდევ →</button>
                 </div>
               </div>
             )}
@@ -676,39 +676,39 @@ function Booking({ preSelected, onBookedReset }: { preSelected: string | null; o
 // ─── Visit ────────────────────────────────────────────────────────────────────
 
 function Visit() {
-  const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-  const hrs = ['08:00 – 19:00', '08:00 – 19:00', '08:00 – 19:00', '08:00 – 19:00', '08:00 – 20:00', '09:00 – 17:00', 'CLOSED']
+  const days = ['ორშ', 'სამშ', 'ოთხშ', 'ხუთშ', 'პარ', 'შაბ', 'კვ']
+  const hrs = ['08:00 – 19:00', '08:00 – 19:00', '08:00 – 19:00', '08:00 – 19:00', '08:00 – 20:00', '09:00 – 17:00', 'დახურულია']
   const today = (new Date().getDay() + 6) % 7
 
   return (
     <section className="section" id="visit">
       <div className="wrap">
         <div className="section-head">
-          <h2 className="section-title">Roll<br/>through.</h2>
-          <p className="section-sub">Drop in Tuesday nights for meet-ups — free coffee, free advice, no sales pitch. Street parking after 6pm.</p>
+          <h2 className="section-title">შემო<br/>იარე.</h2>
+          <p className="section-sub">სამშაბათ საღამოებით შემოდით შეხვედრებზე — უფასო ყავა, უფასო რჩევა, გაყიდვაზე ზეწოლა არ გელოდებიათ. ქუჩის პარკინგი 18:00-ის შემდეგ.</p>
         </div>
         <div className="visit-grid">
           <div className="hours-card">
             <span className="brk tl"/><span className="brk tr"/><span className="brk bl"/><span className="brk br"/>
-            <h3><span className="dot"/> Shop Hours</h3>
+            <h3><span className="dot"/> სამუშაო საათები</h3>
             <ul className="hours-list">
               {days.map((d, i) => (
                 <li key={d} className={i === today ? 'today' : ''}>
-                  <span className="day">{d} {i === today && <span className="now">· now</span>}</span>
-                  <span className={`time${hrs[i] === 'CLOSED' ? ' closed' : ''}`}>{hrs[i]}</span>
+                  <span className="day">{d} {i === today && <span className="now">· ახლა</span>}</span>
+                  <span className={`time${hrs[i] === 'დახურულია' ? ' closed' : ''}`}>{hrs[i]}</span>
                 </li>
               ))}
             </ul>
             <div className="visit-contact">
-              <div className="row"><Icons.Phone className="ic"/><span><b>(415) 555-REV8</b> · ask for Diesel</span></div>
+              <div className="row"><Icons.Phone className="ic"/><span><b>(032) 555-REV8</b> · ჰკითხეთ დიზელს</span></div>
               <div className="row"><Icons.Mail className="ic"/><span><b>shop@redline.garage</b></span></div>
-              <div className="row"><Icons.Pin className="ic"/><span><b>412 Alameda Ave</b>, Bayview, CA 94124</span></div>
-              <div className="row"><Icons.Ig className="ic"/><span><b>@redline.underground</b> · 28.4k</span></div>
+              <div className="row"><Icons.Pin className="ic"/><span><b>ალ. ყაზბეგის გამზ. 412</b>, საბურთალო, თბილისი 0177</span></div>
+              <div className="row"><Icons.Ig className="ic"/><span><b>@redline.underground</b> · 28.4ათ</span></div>
             </div>
           </div>
           <div className="map-card">
             <span className="brk tl"/><span className="brk tr"/><span className="brk bl"/><span className="brk br"/>
-            <h3><Icons.Pin style={{ width: 22, height: 22, color: 'var(--neon-mag)' }}/> Bayview Shop</h3>
+            <h3><Icons.Pin style={{ width: 22, height: 22, color: 'var(--neon-mag)' }}/> საბურთალოს ხელოსანი</h3>
             <div className="map">
               <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
                 <defs>
@@ -732,14 +732,14 @@ function Visit() {
                 <path d="M250 0 L250 300" stroke="rgba(245,255,60,0.4)" strokeWidth="2" strokeDasharray="8 6"/>
                 <path d="M0 200 L400 200" stroke="rgba(0,240,255,0.3)" strokeWidth="1"/>
                 <path d="M0 60 C 150 80, 250 60, 400 80" stroke="rgba(255,43,209,0.5)" strokeWidth="3" fill="none"/>
-                <text x="20" y="55" fontFamily="monospace" fontSize="9" fill="rgba(255,43,209,0.7)" letterSpacing="1">I-280 ↗</text>
-                <text x="130" y="115" fontFamily="monospace" fontSize="9" fill="rgba(245,255,60,0.6)" letterSpacing="1">ALAMEDA AVE</text>
-                <text x="200" y="205" fontFamily="monospace" fontSize="8" fill="rgba(0,240,255,0.5)" letterSpacing="1">3RD ST</text>
+                <text x="20" y="55" fontFamily="monospace" fontSize="9" fill="rgba(255,43,209,0.7)" letterSpacing="1">თბილისი-რუსთავი ↗</text>
+                <text x="130" y="115" fontFamily="monospace" fontSize="9" fill="rgba(245,255,60,0.6)" letterSpacing="1">ყაზბეგის გამზ.</text>
+                <text x="200" y="205" fontFamily="monospace" fontSize="8" fill="rgba(0,240,255,0.5)" letterSpacing="1">ვაჟა-ფშაველა</text>
               </svg>
               <div className="map-overlay"/>
               <div className="map-pin">
                 <div className="pin-dot"/>
-                <div className="pin-label">◤ REDLINE · 412 ALAMEDA</div>
+                <div className="pin-label">◤ REDLINE · ყაზბეგის 412</div>
               </div>
             </div>
           </div>
@@ -762,29 +762,29 @@ function Footer() {
               <span>Redline<span className="brand-x">//</span>Garage</span>
             </a>
             <p style={{ color: 'var(--ink-dim)', fontSize: 14, maxWidth: 320, marginTop: 12 }}>
-              Bayview&apos;s original tuner garage. Open since 2011 — still family run, still oil-stained.
+              საბურთალოს ორიგინალური ტიუნერ ხელოსანი. ღიაა 2011 წლიდან — მაინც ოჯახური, მაინც ზეთით ნაცემი.
             </p>
           </div>
           <div>
-            <h5>Shop</h5>
+            <h5>ხელოსანი</h5>
             <ul className="footer-list">
-              <li><a href="#services">Services</a></li>
-              <li><a href="#pricing">Packages</a></li>
-              <li><a href="#book">Book a bay</a></li>
-              <li><a href="#visit">Hours</a></li>
+              <li><a href="#services">სერვისები</a></li>
+              <li><a href="#pricing">პაკეტები</a></li>
+              <li><a href="#book">დაჯავშნე ბოქსი</a></li>
+              <li><a href="#visit">საათები</a></li>
             </ul>
           </div>
           <div>
-            <h5>Contact</h5>
+            <h5>კონტაქტი</h5>
             <ul className="footer-list">
-              <li>(415) 555-REV8</li>
+              <li>(032) 555-REV8</li>
               <li>shop@redline.garage</li>
-              <li>412 Alameda Ave</li>
-              <li>Bayview, CA 94124</li>
+              <li>ალ. ყაზბეგის გამზ. 412</li>
+              <li>საბურთალო, თბილისი 0177</li>
             </ul>
           </div>
           <div>
-            <h5>Follow</h5>
+            <h5>გამოგვყევით</h5>
             <ul className="footer-list">
               <li><a href="#">@redline.underground</a></li>
               <li><a href="#">YouTube</a></li>
@@ -794,8 +794,8 @@ function Footer() {
           </div>
         </div>
         <div className="footer-bot">
-          <span>© 2026 Redline Garage · ASE Certified · CA Lic. #B-048291</span>
-          <span>◤ Built for street. Tuned for track. ◥</span>
+          <span>© 2026 Redline Garage · სერტიფიცირებული · ლიც. #B-048291</span>
+          <span>◤ აშენდა ქუჩისთვის. მორგდა ტრეკზე. ◥</span>
         </div>
       </div>
     </footer>
@@ -807,11 +807,11 @@ function Footer() {
 function MobileBottomBar({ onBook }: { onBook: () => void }) {
   return (
     <div className="mobile-cta-bar">
-      <a href="tel:+14155553838" className="ph" aria-label="Call shop">
+      <a href="tel:+995322555738" className="ph" aria-label="დარეკე">
         <Icons.Phone style={{ width: 20, height: 20 }}/>
       </a>
       <button type="button" className="btn btn-mag" onClick={onBook}>
-        Book a bay <span className="chev"/>
+        დაჯავშნე ბოქსი <span className="chev"/>
       </button>
     </div>
   )
