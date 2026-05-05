@@ -115,16 +115,19 @@ const Icons: Record<string, (p: IconProps) => React.ReactElement> = {
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
-function Nav({ onBook, onNav }: { onBook: () => void; onNav: (id: string) => void }) {
-  const [open, setOpen] = useState(false)
-
+function Nav({ onBook, onNav, drawerOpen, setDrawerOpen }: {
+  onBook: () => void
+  onNav: (id: string) => void
+  drawerOpen: boolean
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
+    document.body.style.overflow = drawerOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [open])
+  }, [drawerOpen])
 
   const handleNav = (id: string) => {
-    setOpen(false)
+    setDrawerOpen(false)
     onNav(id)
   }
 
@@ -147,31 +150,31 @@ function Nav({ onBook, onNav }: { onBook: () => void; onNav: (id: string) => voi
             <button className="btn nav-book-btn" onClick={onBook} style={{ padding: '10px 16px', fontSize: 11 }}>
               Book bay <span className="chev"/>
             </button>
-            <button className="ham-btn" onClick={() => setOpen(true)} aria-label="Open menu">
+            <button
+              type="button"
+              className={`nav-burger${drawerOpen ? ' open' : ''}`}
+              aria-label="Menu"
+              aria-expanded={drawerOpen}
+              onClick={() => setDrawerOpen(o => !o)}
+            >
               <span/><span/><span/>
             </button>
           </div>
         </div>
       </nav>
-      {open && (
-        <div className="mobile-nav" onClick={() => setOpen(false)}>
-          <div className="mobile-nav-panel" onClick={e => e.stopPropagation()}>
-            <div className="mobile-nav-head">
-              <a href="#home" className="brand" onClick={e => { e.preventDefault(); handleNav('home') }}>
-                <span className="brand-mark">R<span className="brand-x">/</span></span>
-                <span>Redline<span className="brand-x">//</span>Garage</span>
-              </a>
-              <button className="close-btn" onClick={() => setOpen(false)} aria-label="Close menu">✕</button>
-            </div>
-            <nav className="mobile-nav-links">
-              <a href="#services" onClick={e => { e.preventDefault(); handleNav('services') }}>Services</a>
-              <a href="#pricing" onClick={e => { e.preventDefault(); handleNav('pricing') }}>Packages</a>
-              <a href="#book" onClick={e => { e.preventDefault(); handleNav('book') }}>Book</a>
-              <a href="#visit" onClick={e => { e.preventDefault(); handleNav('visit') }}>Visit</a>
-            </nav>
+      <div className={`nav-drawer${drawerOpen ? ' open' : ''}`}>
+        <div className="nav-drawer-in">
+          <a href="#services" onClick={e => { e.preventDefault(); handleNav('services') }}>Services <span className="arr">→</span></a>
+          <a href="#pricing" onClick={e => { e.preventDefault(); handleNav('pricing') }}>Packages <span className="arr">→</span></a>
+          <a href="#book" onClick={e => { e.preventDefault(); handleNav('book') }}>Book a bay <span className="arr">→</span></a>
+          <a href="#visit" onClick={e => { e.preventDefault(); handleNav('visit') }}>Visit / Hours <span className="arr">→</span></a>
+          <div className="nav-drawer-foot">
+            <span>◉ <b>(415) 555-REV8</b></span>
+            <span>412 Alameda Ave · Bayview, CA</span>
+            <span>Open Mon–Fri 08:00 – 19:00</span>
           </div>
         </div>
-      )}
+      </div>
     </>
   )
 }
@@ -803,13 +806,11 @@ function Footer() {
 
 function MobileBottomBar({ onBook }: { onBook: () => void }) {
   return (
-    <div className="mob-cta">
-      <a href="tel:+14155553838" className="btn btn-mag mob-cta-phone">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.07 10.8 19.79 19.79 0 0 1 .01 2.18 2 2 0 0 1 2 0h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L6.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16z"/>
-        </svg>
+    <div className="mobile-cta-bar">
+      <a href="tel:+14155553838" className="ph" aria-label="Call shop">
+        <Icons.Phone style={{ width: 20, height: 20 }}/>
       </a>
-      <button className="btn btn-mag mob-cta-book" onClick={onBook}>
+      <button type="button" className="btn btn-mag" onClick={onBook}>
         Book a bay <span className="chev"/>
       </button>
     </div>
@@ -820,6 +821,7 @@ function MobileBottomBar({ onBook }: { onBook: () => void }) {
 
 export default function GarageApp() {
   const [preSelected, setPreSelected] = useState<string | null>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   const scrollToSection = useCallback((id: string) => {
     const el = document.getElementById(id)
@@ -828,7 +830,10 @@ export default function GarageApp() {
     window.scrollTo({ top, behavior: 'smooth' })
   }, [])
 
-  const scrollToBook = useCallback(() => scrollToSection('book'), [scrollToSection])
+  const scrollToBook = useCallback(() => {
+    setDrawerOpen(false)
+    scrollToSection('book')
+  }, [scrollToSection])
 
   const pickService = (id: string) => {
     setPreSelected(id)
@@ -840,7 +845,7 @@ export default function GarageApp() {
       <div className="bp-grid"/>
       <div className="scanlines"/>
       <div className="page">
-        <Nav onBook={scrollToBook} onNav={scrollToSection}/>
+        <Nav onBook={scrollToBook} onNav={scrollToSection} drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen}/>
         <Hero onBook={scrollToBook}/>
         <Services onPick={pickService}/>
         <Pricing onBook={scrollToBook}/>
