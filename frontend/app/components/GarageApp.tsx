@@ -298,16 +298,24 @@ function Telemetry() {
 function Hero({ onBook }: { onBook: () => void }) {
   return (
     <section className="hero" id="home">
+      <div className="hero-photo">
+        <img
+          src="/hero-car.jpg"
+          alt="Modified sports car under neon garage lights"
+          loading="eager"
+          onError={(e) => { (e.currentTarget.parentElement as HTMLElement).classList.add('hero-photo--fallback') }}
+        />
+        <div className="hero-photo-tint"/>
+        <div className="hero-photo-scanlines"/>
+        <div className="hero-photo-spec">
+          <span className="dot"/> ◤ BUILD #847 · CAMARO ZL1 · STAGE 3 · 720HP
+        </div>
+      </div>
       <div className="hero-road"/>
       <div className="hero-glow"/>
       <div className="wrap hero-grid">
         <div>
           <div className="tag" style={{ marginBottom: 18 }}>◤ დაარსდა 2011 · UNDERGROUND CERTIFIED</div>
-          <h1 className="hero-title">
-            <span className="stroke hero-pulse">მოგვიყვანე</span><br/>
-            <span>შენი ჯართი.</span>
-            <span className="line2">გაიყვანე მხეცი.</span>
-          </h1>
           <p className="hero-copy">
             სრული მომსახურების ტიუნერ ხელოსანი საბურთალოზე. <b>დიაგნოსტიკა, ძარა, შეღებვა, ძრავის ახლად აწყობა, სუსპენზია</b> — ხელით გადანაწილებული, არა ჩვენაობრივი საოცების ბავშვების მიერ. დაჯავშნე ბოქსი ქვემოთ, ან დარეკე და დიზელს დაჯეჭი.
           </p>
